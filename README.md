@@ -6,7 +6,7 @@ This project provides the Node-RED and Cloud Function code to build a TJBot Boot
 
 There are two components to the photo booth: a Node-RED flow running on the Raspberry Pi that controls the TJBot. When the TJBot receives a _takephoto_ command, it captures and uploads the photo, and publishes _camerastatus_ and _phototaken_ events to the Watson IoT Platform. A Node-RED application running in IBM Bluemix subscribes to these events, maintains a gallery of photos, and sends MMS messages via Twilio. The photos are stored in an Object Storage service.
 
-## Object Stoage
+## Object Storage
 
 Photos are stored in an IBM Bluemix Object Storage service. This section describes how to create an Object Storage service and create a container.
 
@@ -85,7 +85,7 @@ _Node-RED dashboard to command TJBot to take a photo, display a gallery, and inp
 ![](assets/photobooth.png)	
 _Node-RED flow to run the Gallery application_
 
-1. Create an [IoT Starter boilerplate application]() in IBM Bluemix. This will create a Node-RED application with a Watson IoT Platform service.
+1. Create an [IoT Starter boilerplate application](https://console.bluemix.net/catalog/starters/internet-of-things-platform-starter) in IBM Bluemix. This will create a Node-RED application with a Watson IoT Platform service.
 
 	![](assets/catalog.png)
 
