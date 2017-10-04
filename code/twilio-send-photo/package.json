@@ -1,0 +1,9 @@
+{
+  "name": "twilio-openwhisk-send-photo",
+  "version": "0.1.0",
+  "description": "Cloud Function that sends a MMS via Twilio.",
+  "main": "main.js",
+  "dependencies": {
+    "twilio": "^3.0.0"
+  }
+}
