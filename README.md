@@ -4,13 +4,13 @@ This project provides the Node-RED and Cloud Function code to build a TJBot Boot
 
 ![](assets/overview.png)
 
-There are two components to the photo booth: a Node-RED flow running on the Raspberry Pi that controls the TJBot. When the TJBot receives a _takephoto_ command, it captures and uploads the photo, and publishes _camerastatus_ and _phototaken_ events to the Watson IoT Platform. A Node-RED application running in IBM Bluemix subscribes to these events, maintains a gallery of photos, and sends MMS messages via Twilio. The photos are stored in an Object Storage service.
+There are two components to the photo booth: a Node-RED flow running on the Raspberry Pi that controls the TJBot. When the TJBot receives a _takephoto_ command, it captures and uploads the photo, and publishes _camerastatus_ and _phototaken_ events to the Watson IoT Platform. A Node-RED application running in IBM Cloud subscribes to these events, maintains a gallery of photos, and sends MMS messages via Twilio. The photos are stored in an Object Storage service.
 
 ## Object Storage
 
-Photos are stored in an IBM Bluemix Object Storage service. This section describes how to create an Object Storage service and create a container.
+Photos are stored in an IBM Cloud Object Storage service. This section describes how to create an Object Storage service and create a container.
 
-1. Create an [Object Storage service](https://console.bluemix.net/catalog/infrastructure/object-storage-group) in IBM Bluemix
+1. Create an [Object Storage service](https://console.bluemix.net/catalog/infrastructure/object-storage-group) in IBM Cloud
 
 	![](assets/createobjectstorage.png)
 
@@ -18,7 +18,7 @@ Photos are stored in an IBM Bluemix Object Storage service. This section describ
 
 	![](assets/createcontainer.png)
 	
-1. Copy the service credentials for use later on in the object storage nodes in Node-RED running on both the TJBot and in IBM Bluemix.
+1. Copy the service credentials for use later on in the object storage nodes in Node-RED running on both the TJBot and in IBM Cloud.
 
 	![](assets/objectstorage.png)
 
@@ -29,11 +29,11 @@ This project uses two Cloud Functions to:
 1. watermark the image by overlaying a graphic over the selected photo
 2. send an image as an MMS with the Twilio API
 
-This section describes how to create the two Cloud Functions, via the IBM Bluemix console and from the command line.
+This section describes how to create the two Cloud Functions, via the IBM Cloud console and from the command line.
 
 ### Cloud Function to Watermark Image
 
-The file [watermark.js](code/watermark.js) contains the Cloud Function that overlays one image on top of another. This Cloud Function can be created in the IBM Bluemix console.
+The file [watermark.js](code/watermark.js) contains the Cloud Function that overlays one image on top of another. This Cloud Function can be created in the IBM Cloud console.
 
 1. Create a new action. Make sure to check the box labeled _Enable as Web Action_.
 
@@ -69,13 +69,13 @@ The directory [code/twilio-send-photo](code/twilio-send-photo) includes the Clou
 	./deploy.sh --update
 	```
 
-1. Copy the Cloud Function Web Action URL from the IBM Bluemix dashboard into the configuration node in the Node-RED application in the next section.
+1. Copy the Cloud Function Web Action URL from the IBM Cloud dashboard into the configuration node in the Node-RED application in the next section.
 
 	![](assets/twiliosendmessageendpoint.png)
 
-## Node-RED Image Gallery Application in IBM Bluemix
+## Node-RED Image Gallery Application in IBM Cloud
 
-The Node-RED application in IBM Bluemix provides controls to take a photo, displays the gallery of photos taken, and a phone number input to capture the destination an MMS should be sent.
+The Node-RED application in IBM Cloud provides controls to take a photo, displays the gallery of photos taken, and a phone number input to capture the destination an MMS should be sent.
 
 This section describes how to create the Node-RED boilerplate application and configure the application.
 
@@ -85,7 +85,7 @@ _Node-RED dashboard to command TJBot to take a photo, display a gallery, and inp
 ![](assets/photobooth.png)	
 _Node-RED flow to run the Gallery application_
 
-1. Create an [IoT Starter boilerplate application](https://console.bluemix.net/catalog/starters/internet-of-things-platform-starter) in IBM Bluemix. This will create a Node-RED application with a Watson IoT Platform service.
+1. Create an [IoT Starter boilerplate application](https://console.bluemix.net/catalog/starters/internet-of-things-platform-starter) in IBM Cloud. This will create a Node-RED application with a Watson IoT Platform service.
 
 	![](assets/catalog.png)
 
@@ -124,14 +124,44 @@ This section describes how to setup the TJBot with the Node-RED flow and necessa
 
 1. Import the JSON from the file named [raspberrypiflow.json](code/raspberrypiflow.json) into Node-RED running on the Raspberry Pi.
 
-1. Add the IBM Bluemix Object Storage service credentials into the object storage node.
+1. Add the IBM Cloud Object Storage service credentials into the object storage node.
 
 	![](assets/piobjectstorage.png)
 
 1. Add the device credentials from the Watson IoT Platform.
 
 	![](assets/ibmiotcreds.png)
-		
+	
+## Twitter	
+
+This section describes how to configure the photo booth to tweet photos in addition to send a text message. The additional flows can be imported using the JSON in the [code/twitter.json](code/twitter.json) file.
+
+The first modification is to add the text input element into the Node-RED dashboard interface.
+
+![](assets/twitter-ui.png)
+
+The second modification is to add the functionality to send a tweet if a Twitter handle is provided.
+
+![](assets/twitter-sendphoto.png)
+
+1. Import the JSON from the file named [twitter.json](code/twitter.json)
+
+2. Double click on the Twitter node and authenticate with a Twitter account.
+
+    ![](assets/twitter-authorize.png)
+    
+3. Configure the tweet content in the **Set Configuration** node.
+
+    ![](assets/twitter-configuration.png)
+
+4. Deploy the changes and access the Node-RED dashboard interface.
+
+    ![](assets/twitter-dashboard.png)
+    
+Here's an example of what the tweet looks like in the Twitter timeline.
+
+![](assets/twitter-tweet.png)
+    
 ## License
 
 This code is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE).
